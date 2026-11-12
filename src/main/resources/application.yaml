@@ -17,3 +17,7 @@ management:
   endpoint:
     health:
       show-details: always   # faqat lokal uchun, prod'da o'chiramiz
+
+logging:
+  pattern:
+    level: "%5p [%X{correlationId:-}]"

@@ -1,5 +1,7 @@
 package uz.businesshub.product.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.businesshub.product.api.dto.CreateProductRequest;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class ProductService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -39,6 +42,7 @@ public class ProductService {
     }
 
     public ProductResponse getById(UUID companyId, UUID id) {
+        log.info("Fetching product {} for company {}", id, companyId);
         return productRepository.findByIdAndCompanyId(id, companyId)
                 .map(ProductResponse::from)
                 .orElseThrow(() -> new ProductNotFoundException(id));
