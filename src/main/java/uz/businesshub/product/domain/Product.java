@@ -1,6 +1,8 @@
 package uz.businesshub.product.domain;
 
 import jakarta.persistence.*;
+import uz.businesshub.product.exception.VersionConflictException;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
@@ -75,6 +77,19 @@ public class Product {
 
     public void deactivate() {
         this.status = ProductStatus.INACTIVE;
+    }
+
+    public void checkVersion(long expectedVersion) {
+        if (this.version == null || this.version != expectedVersion) {
+            throw new VersionConflictException(expectedVersion, this.version == null ? -1 : this.version);
+        }
+    }
+
+    public void update(String barcode, String name, String description, BigDecimal price) {
+        this.barcode = barcode;
+        this.name = name;
+        this.description = description;
+        changePrice(price);
     }
 
     @PrePersist

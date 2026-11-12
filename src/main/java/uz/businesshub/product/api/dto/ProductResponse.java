@@ -16,12 +16,13 @@ public record ProductResponse(
         BigDecimal price,
         ProductStatus status,
         Instant createdAt,
-        Instant updatedAt
+        Instant updatedAt,
+        Long version
 ) {
     public static ProductResponse from(Product p) {
         return new ProductResponse(
                 p.getId(), p.getSku(), p.getBarcode(), p.getName(),
                 p.getDescription(), p.getPrice(), p.getStatus(),
-                p.getCreatedAt(), p.getUpdatedAt());
+                p.getCreatedAt(), p.getUpdatedAt(), p.getVersion());
     }
 }

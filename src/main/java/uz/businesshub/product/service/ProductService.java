@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.businesshub.product.api.dto.CreateProductRequest;
 import uz.businesshub.product.api.dto.ProductResponse;
+import uz.businesshub.product.api.dto.UpdateProductRequest;
 import uz.businesshub.product.domain.Product;
 import uz.businesshub.product.exception.DuplicateSkuException;
 import uz.businesshub.product.exception.ProductNotFoundException;
@@ -40,6 +41,25 @@ public class ProductService {
     public ProductResponse getById(UUID companyId, UUID id) {
         return productRepository.findByIdAndCompanyId(id, companyId)
                 .map(ProductResponse::from)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    @Transactional
+    public ProductResponse update(UUID companyId, UUID id, UpdateProductRequest request) {
+        Product product = findOrThrow(companyId, id);
+        product.checkVersion(request.version());
+        product.update(request.barcode(), request.name(), request.description(), request.price());
+        productRepository.flush();
+        return ProductResponse.from(product);
+    }
+
+    @Transactional
+    public void deactivate(UUID companyId, UUID id) {
+        findOrThrow(companyId, id).deactivate();
+    }
+
+    private Product findOrThrow(UUID companyId, UUID id) {
+        return productRepository.findByIdAndCompanyId(id, companyId)
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }

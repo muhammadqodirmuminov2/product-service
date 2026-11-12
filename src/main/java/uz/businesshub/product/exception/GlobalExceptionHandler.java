@@ -52,6 +52,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Unexpected error occurred", "INTERNAL_ERROR");
     }
 
+    @ExceptionHandler(VersionConflictException.class)
+    public ProblemDetail handleVersionConflict(VersionConflictException ex) {
+        return problem(HttpStatus.CONFLICT, "Version conflict", ex.getMessage(), "VERSION_CONFLICT");
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.businesshub.product.api.dto.CreateProductRequest;
 import uz.businesshub.product.api.dto.ProductResponse;
+import uz.businesshub.product.api.dto.UpdateProductRequest;
 import uz.businesshub.product.service.ProductService;
 
 import java.net.URI;
@@ -35,5 +36,21 @@ public class ProductController {
             @RequestHeader("X-Company-Id") UUID companyId,
             @PathVariable UUID id) {
         return productService.getById(companyId, id);
+    }
+
+    @PutMapping("/{id}")
+    public ProductResponse update(
+            @RequestHeader("X-Company-Id") UUID companyId,
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdateProductRequest request) {
+        return productService.update(companyId, id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deactivate(
+            @RequestHeader("X-Company-Id") UUID companyId,
+            @PathVariable UUID id) {
+        productService.deactivate(companyId, id);
+        return ResponseEntity.noContent().build();
     }
 }
