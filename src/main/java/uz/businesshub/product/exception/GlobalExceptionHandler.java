@@ -57,6 +57,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem(HttpStatus.CONFLICT, "Version conflict", ex.getMessage(), "VERSION_CONFLICT");
     }
 
+    @ExceptionHandler(MissingTenantException.class)
+    public ProblemDetail handleMissingTenant(MissingTenantException ex) {
+        return problem(HttpStatus.FORBIDDEN, "Tenant missing", ex.getMessage(), "TENANT_MISSING");
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,

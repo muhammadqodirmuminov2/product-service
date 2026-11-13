@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.businesshub.product.api.dto.CreateProductRequest;
 import uz.businesshub.product.api.dto.ProductResponse;
 import uz.businesshub.product.api.dto.UpdateProductRequest;
+import uz.businesshub.product.security.CurrentCompanyId;
 import uz.businesshub.product.service.ProductService;
 
 import java.net.URI;
@@ -23,7 +24,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> create(
-            @RequestHeader("X-Company-Id") UUID companyId,
+            @CurrentCompanyId UUID companyId,
             @Valid @RequestBody CreateProductRequest request) {
         ProductResponse created = productService.create(companyId, request);
         return ResponseEntity
@@ -33,14 +34,14 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductResponse getById(
-            @RequestHeader("X-Company-Id") UUID companyId,
+            @CurrentCompanyId UUID companyId,
             @PathVariable UUID id) {
         return productService.getById(companyId, id);
     }
 
     @PutMapping("/{id}")
     public ProductResponse update(
-            @RequestHeader("X-Company-Id") UUID companyId,
+            @CurrentCompanyId UUID companyId,
             @PathVariable UUID id,
             @Valid @RequestBody UpdateProductRequest request) {
         return productService.update(companyId, id, request);
@@ -48,7 +49,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deactivate(
-            @RequestHeader("X-Company-Id") UUID companyId,
+            @CurrentCompanyId UUID companyId,
             @PathVariable UUID id) {
         productService.deactivate(companyId, id);
         return ResponseEntity.noContent().build();
