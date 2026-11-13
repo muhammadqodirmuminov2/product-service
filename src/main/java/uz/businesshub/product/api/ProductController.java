@@ -2,6 +2,7 @@ package uz.businesshub.product.api;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.businesshub.product.api.dto.CreateProductRequest;
 import uz.businesshub.product.api.dto.ProductResponse;
@@ -23,6 +24,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('COMPANY_ADMIN')")
     public ResponseEntity<ProductResponse> create(
             @CurrentCompanyId UUID companyId,
             @Valid @RequestBody CreateProductRequest request) {
@@ -33,6 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'CASHIER')")
     public ProductResponse getById(
             @CurrentCompanyId UUID companyId,
             @PathVariable UUID id) {
@@ -40,6 +43,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('COMPANY_ADMIN')")
     public ProductResponse update(
             @CurrentCompanyId UUID companyId,
             @PathVariable UUID id,
@@ -48,6 +52,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('COMPANY_ADMIN')")
     public ResponseEntity<Void> deactivate(
             @CurrentCompanyId UUID companyId,
             @PathVariable UUID id) {

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.springframework.security.access.AccessDeniedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -60,6 +61,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MissingTenantException.class)
     public ProblemDetail handleMissingTenant(MissingTenantException ex) {
         return problem(HttpStatus.FORBIDDEN, "Tenant missing", ex.getMessage(), "TENANT_MISSING");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDenied(AccessDeniedException ex) {
+        return problem(HttpStatus.FORBIDDEN, "Access denied",
+                "You do not have permission to perform this action", "ACCESS_DENIED");
     }
 
     @Override
